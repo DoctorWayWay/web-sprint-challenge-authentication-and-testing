@@ -30,32 +30,32 @@ describe("[POST] /api/auth/register", () => {
       })
   })
   it("responds with new user and status code 201 if inputs are valid", async () => {
-    expect(201)
+    expect(res.status).toBe(201)
     expect(res.body).toHaveProperty("id", 2)
     expect(res.body).toHaveProperty("username", "Alfred9000")
     expect(res.body).toHaveProperty("password")
   })
-  it('responds with { message: "username taken" } and status code 400 if the request body does not contain either a username or password key with a value', async () => {
-    const responce = await request(server)
+  it('responds with { message: "username and password required" } and status code 400 if the request body does not contain either a username or password key with a value', async () => {
+    const response = await request(server)
       .post('/api/auth/register')
       .send({
         username: "",
         password: "1234"
       })
-    expect(400)
-    expect(responce.body).toMatchObject({
+    expect(response.status).toBe(400)
+    expect(response.body).toMatchObject({
       message: "username and password required"
     })
   })
   it('responds with { message: "username taken" } and status code 409 if the username in the request body already exists in the database', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .post("/api/auth/register")
       .send({
         username: "eli_the_lion",
         password: "1234"
       })
-    expect(409)
-    expect(responce.body).toMatchObject({
+    expect(response.status).toBe(409)
+    expect(response.body).toMatchObject({
       message: "username taken"
     })
   })
@@ -63,34 +63,34 @@ describe("[POST] /api/auth/register", () => {
 
 describe("[POST] /api/auth/login", () => {
   it('responds with an object containing a "message" key with the value "welcome {nameOfUser}" and status code 200 if the request body username and password are valid', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .post("/api/auth/login")
       .send({
         username: "eli_the_lion",
         password: "abc123"
       })
-    expect(200)
-    expect(responce.body).toHaveProperty("message", "welcome eli_the_lion")
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty("message", "welcome eli_the_lion")
   })
   it('responds with { message: "invalid credentials" } and status code 401 if request body username and password are invalid', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .post("/api/auth/login")
       .send({
         username: "eli_the_lion",
         password: "badPassword"
       })
-    expect(401)
-    expect(responce.body).toHaveProperty("message", "invalid credentials")
+    expect(response.status).toBe(401)
+    expect(response.body).toHaveProperty("message", "invalid credentials")
   })
   it('responds with { message: "username and password required" } and status code 400 if either request body username or password are missing', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .post("/api/auth/login")
       .send({
         username: "",
         password: "abc123"
       })
-    expect(400)
-    expect(responce.body).toHaveProperty("message", "username and password required")
+    expect(response.status).toBe(400)
+    expect(response.body).toHaveProperty("message", "username and password required")
   })
 })
 
@@ -102,23 +102,23 @@ describe("[GET] /api/jokes", () => {
         username: "eli_the_lion",
         password: "abc123"
       })
-    const responce = await request(server)
+    const response = await request(server)
       .get("/api/jokes")
       .set("Authorization", loginRes.body.token)
-    expect(200)
-    expect(responce.body).toHaveLength(3)
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveLength(3)
   })
   it('responds with { message: "token required" } and status code 401 if the request is unauthorized', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .get("/api/jokes")
-    expect(401)
-    expect(responce.body).toHaveProperty("message", "token required")
+    expect(response.status).toBe(401)
+    expect(response.body).toHaveProperty("message", "token required")
   })
   it('responds with { message: "token invalid" } and status code 401 if the authorization header has a bad token', async () => {
-    const responce = await request(server)
+    const response = await request(server)
       .get("/api/jokes")
       .set("Authorization", "superBadToken")
-    expect(401)
-    expect(responce.body).toHaveProperty("message", "token invalid")
+    expect(response.status).toBe(401)
+    expect(response.body).toHaveProperty("message", "token invalid")
   })
 })
