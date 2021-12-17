@@ -2,10 +2,9 @@ const db = require("../../data/dbConfig")
 const Users = require("../users/users-model")
 
 async function register(credentials) {
-  const newUserID = await db("users")
+  const [newUserID] = await db("users")
     .insert(credentials)
-    .first()
-  const newUser = await Users.findById(newUserID)
+  const newUser = await Users.findBy({ id: newUserID })
   return newUser
 }
 

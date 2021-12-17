@@ -2,8 +2,11 @@ const router = require('express').Router();
 const { BCRYPT_ROUNDS } = require("../secrets");
 const Auth = require("./auth-model")
 const bcrypt = require('bcryptjs')
+const {
+  validateRegister,
+} = require("../middleware/auth-middleware")
 
-router.post('/register', async (req, res, next) => {
+router.post('/register', validateRegister, async (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
