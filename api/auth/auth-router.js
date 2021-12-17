@@ -1,7 +1,9 @@
 const router = require('express').Router();
+const { BCRYPT_ROUNDS } = require("../secrets");
+const Auth = require("./auth-model")
+const bcrypt = require('bcryptjs')
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+router.post('/register', async (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -27,7 +29,18 @@ router.post('/register', (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-});
+  try {
+    const { username, password } = req.body
+    const hashedPassword = bcrypt.hashSync(password, BCRYPT_ROUNDS)
+    const createdUser = await Auth.register({
+      username: username,
+      password: hashedPassword
+    })
+    res.status(201).json(createdUser)
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.post('/login', (req, res) => {
   res.end('implement login, please!');
