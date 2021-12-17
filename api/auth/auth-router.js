@@ -1,5 +1,5 @@
-const router = require('express').Router();
-const { BCRYPT_ROUNDS } = require("../secrets");
+const router = require('express').Router()
+const { BCRYPT_ROUNDS } = require("../secrets")
 const Auth = require("./auth-model")
 const bcrypt = require('bcryptjs')
 const tokenBuilder = require("../auth/auth-helpers")

@@ -6,6 +6,9 @@ beforeAll(async () => {
   await db.migrate.rollback()
   await db.migrate.latest()
 })
+beforeEach(async () => {
+  await db.seed.run()
+})
 afterAll(async () => {
   await db.destroy()
 })
@@ -28,7 +31,7 @@ describe("[POST] /api/auth/register", () => {
   })
   it("responds with new user if inputs are valid", async () => {
     expect(201)
-    expect(res.body).toHaveProperty("id", 1)
+    expect(res.body).toHaveProperty("id", 2)
     expect(res.body).toHaveProperty("username", "Alfred9000")
     expect(res.body).toHaveProperty("password")
   })
@@ -48,7 +51,7 @@ describe("[POST] /api/auth/register", () => {
     const responce = await request(server)
       .post('/api/auth/register')
       .send({
-        username: "Alfred9000",
+        username: "eli_the_lion",
         password: "1234"
       })
     expect(409)
