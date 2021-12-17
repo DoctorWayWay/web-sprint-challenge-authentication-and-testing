@@ -8,6 +8,11 @@ async function register(credentials) {
   return newUser
 }
 
+// async function login(credentials) {
+//   return
+// }
+
 module.exports = {
   register,
+  // login,
 }
