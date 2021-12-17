@@ -93,3 +93,32 @@ describe("[POST] /api/auth/login", () => {
     expect(responce.body).toHaveProperty("message", "username and password required")
   })
 })
+
+describe("[GET] /api/jokes", () => {
+  it("responds with an array of jokes and a status code of 200 if request headers authorization is valid", async () => {
+    const loginRes = await request(server)
+      .post("/api/auth/login")
+      .send({
+        username: "eli_the_lion",
+        password: "abc123"
+      })
+    const responce = await request(server)
+      .get("/api/jokes")
+      .set("Authorization", loginRes.body.token)
+    expect(200)
+    expect(responce.body).toHaveLength(3)
+  })
+  it('responds with { message: "token required" } and status code 401 if the request is unauthorized', async () => {
+    const responce = await request(server)
+      .get("/api/jokes")
+    expect(401)
+    expect(responce.body).toHaveProperty("message", "token required")
+  })
+  it('responds with { message: "token invalid" } and status code 401 if the authorization header has a bad token', async () => {
+    const responce = await request(server)
+      .get("/api/jokes")
+      .set("Authorization", "superBadToken")
+    expect(401)
+    expect(responce.body).toHaveProperty("message", "token invalid")
+  })
+})
