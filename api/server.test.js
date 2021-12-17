@@ -18,16 +18,41 @@ describe("Database enviroment", () => {
 
 describe("Authentication Router", () => {
   describe("[POST] /api/auth/register", () => {
-    it("responds with new user if inputs are valid", async () => {
-      const res = await request(server)
+    let res
+    beforeEach(async () => {
+      res = await request(server)
         .post('/api/auth/register')
         .send({
           username: "Alfred9000",
           password: "abc123"
         })
+    })
+    it("responds with new user if inputs are valid", async () => {
       expect(res.body).toHaveProperty("id", 1)
       expect(res.body).toHaveProperty("username", "Alfred9000")
       expect(res.body).toHaveProperty("password")
+    })
+    it('responds with { message: "username taken" } if the request body does not contain either a username or password key with a value', async () => {
+      const result = await request(server)
+        .post('/api/auth/register')
+        .send({
+          username: "",
+          password: "1234"
+        })
+      expect(result.body).toMatchObject({
+        message: "username and password required"
+      })
+    })
+    it('responds with { message: "username taken" } if the username in the request body already exists in the database', async () => {
+      const res = await request(server)
+        .post('/api/auth/register')
+        .send({
+          username: "Alfred9000",
+          password: "1234"
+        })
+      expect(res.body).toMatchObject({
+        message: "username taken"
+      })
     })
   })
 })
