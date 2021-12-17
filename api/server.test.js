@@ -14,7 +14,7 @@ afterAll(async () => {
 })
 
 describe("Database enviroment", () => {
-  it("is in the correct env", () => {
+  it("is in the testing enviroment", () => {
     expect(process.env.NODE_ENV).toBe('testing')
   })
 })
@@ -82,7 +82,7 @@ describe("[POST] /api/auth/login", () => {
     expect(401)
     expect(responce.body).toHaveProperty("message", "invalid credentials")
   })
-  it('responds with { message: "invalid credentials" } and status code 400 if either request body username or password are missing', async () => {
+  it('responds with { message: "username and password required" } and status code 400 if either request body username or password are missing', async () => {
     const responce = await request(server)
       .post("/api/auth/login")
       .send({
