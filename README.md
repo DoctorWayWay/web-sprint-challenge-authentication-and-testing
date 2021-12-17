@@ -54,6 +54,10 @@ Your finished project must include all of the following requirements (further in
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics.
 
 1. Differences between using _sessions_ or _JSON Web Tokens_ for authentication.
+- _Sessions_ are stored on the **server**, while _JWTs_ are stored on the **client**. _JWTs_ are cryptographically signed, while session cookies are not.
 2. What does `bcryptjs` do to help us store passwords in a secure manner?
+- The `bcryptjs` library helps hash passwords to add a level of encryption. Using their `hashSync` methods, we can pass in a string in the first parameter, and, in the second parameter, we can specify how many times `bcryptjs` should exponentially hash the first parameter.
 3. How are unit tests different from integration and end-to-end testing?
+- **Unit** tests test isolated bits of code, like individual functions. They are extremely helpful when developing. **Integration** tests test a particullar functionality of the software, and **end-to-end** tests test the entire software.
 4. How does _Test Driven Development_ change the way we write applications and tests?
+- _Test Driven Development_ (a.k.a **TDD**) is the process of developing software by writing out unit tests first, then completing those tests by adding in what is being tested and making it function as the  tests specify so that the tests pass. **TDD** makes developers think harder on what they are developing because it forces them to think up of what needs to be, rather then just writing code without any clear direction (something I find myself doing often when I don't apply TDD).
