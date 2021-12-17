@@ -2,8 +2,11 @@ const router = require('express').Router();
 const { BCRYPT_ROUNDS } = require("../secrets");
 const Auth = require("./auth-model")
 const bcrypt = require('bcryptjs')
+const tokenBuilder = require("../auth/auth-helpers")
+// Middleware
 const {
   validateRegister,
+  validateLogin,
 } = require("../middleware/auth-middleware")
 
 router.post('/register', validateRegister, async (req, res, next) => {
@@ -45,7 +48,7 @@ router.post('/register', validateRegister, async (req, res, next) => {
   }
 })
 
-router.post('/login', (req, res, next) => {
+router.post('/login', validateLogin, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -69,7 +72,15 @@ router.post('/login', (req, res, next) => {
     4- On FAILED login due to `username` not existing in the db, or `password` being incorrect,
       the response body should include a string exactly as follows: "invalid credentials".
   */
-  next()
+  try {
+    const token = tokenBuilder(req.user)
+    res.status(200).json({
+      message: `welcome ${req.user.username}`,
+      token: token
+    })
+  } catch (err) {
+    next(err)
+  }
 });
 
 module.exports = router;
